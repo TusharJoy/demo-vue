@@ -1,18 +1,16 @@
 <template>
   <div class='range-slider'>
     <input type="range" :min="minThreshold" :max="maxThreshold" :step="step"
-           @input='$emit("update:first", parseInt($event.target.value))' :value='first'
-           @change="setBubble('rangeFirst','bubbleF')"
+           @input="$emit('update:first', parseInt($event.target.value))"
+           :value='first'
            id="rangeFirst"
     >
     <output id="bubbleF" class="bubbleFirst">{{ first }}</output>
-    <!--    <input type="number" v-model="first">-->
 
     <input type="range" :min="minThreshold" :max="maxThreshold" :step="step"
-           @input='$emit("update:second", parseInt($event.target.value))' :value='second'
-           @change="setBubble('rangeLast','bubbleLast')"
+           @input="$emit('update:second', parseInt($event.target.value))" :value='second'
            id="rangeLast">
-    <!--    <input type="number" v-model="second">-->
+
     <output  id="bubbleLast" class="bubble">{{ second }}</output>
   </div>
 </template>
@@ -53,8 +51,8 @@ const setBubble = (rangeId, bubbleId) => {
   const range = document.getElementById(rangeId);
   const bubble = document.getElementById(bubbleId);
   const val = range.value;
-  const min = range.min ? range.min : 0;
-  const max = range.max ? range.max : 100;
+  const min =  0;
+  const max =  100;
   const newVal = Number(((val - min) * 100) / (max - min));
 
   // Sorta magic numbers based on size of the native UI thumb
