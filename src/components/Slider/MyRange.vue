@@ -85,15 +85,15 @@ input[type=range]:focus {
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #2497e3;
+  background: #FFCF67;
 }
 
 input[type=range]:focus::-ms-fill-lower {
-  background: #2497e3;
+  background: #FFCF67;
 }
 
 input[type=range]:focus::-ms-fill-upper {
-  background: #2497e3;
+  background: #FFCF67;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -101,11 +101,12 @@ input[type=range]::-webkit-slider-runnable-track {
   height: 5px;
   cursor: pointer;
   /* animate: 0.2s; */
-  background: #2497e3;
+  background: #FFCF67;
   border-radius: 1px;
   box-shadow: none;
   border: 0;
 }
+
 
 input[type=range]::-webkit-slider-thumb {
   z-index: 2;
