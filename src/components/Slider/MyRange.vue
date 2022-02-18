@@ -19,6 +19,8 @@
 
 <script setup>
 
+import {onMounted} from "vue";
+
 defineProps({
   minThreshold: {
     type: Number,
@@ -40,6 +42,10 @@ defineProps({
     type: Number,
     default: 80
   }
+})
+onMounted(() => {
+  setBubble('rangeFirst','bubbleF')
+  setBubble('rangeLast','bubbleLast')
 })
 
 const setBubble = (rangeId, bubbleId) => {
