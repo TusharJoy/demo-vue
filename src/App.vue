@@ -8,6 +8,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterView />
 </template>
 
+<!--
 <style>
 @import "@vueform/slider/themes/default.css";
 </style>
+-->

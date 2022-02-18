@@ -1,12 +1,11 @@
 <template>
   <div class='range-slider'>
+    <output id="bubbleF" class="bubbleFirst">{{ first }}</output>
     <input type="range" :min="minThreshold" :max="maxThreshold" :step="step"
            @input="$emit('update:first', parseInt($event.target.value))"
            :value='first'
-           id="rangeFirst"
-    >
-    <output id="bubbleF" class="bubbleFirst">{{ first }}</output>
-
+           id="rangeFirst">
+   
     <input type="range" :min="minThreshold" :max="maxThreshold" :step="step"
            @input="$emit('update:second', parseInt($event.target.value))" :value='second'
            id="rangeLast">
@@ -62,19 +61,19 @@ const setBubble = (rangeId, bubbleId) => {
 
 <style scoped>
 .range-slider {
-  width: 300px;
+  display: inline-block;
+  max-width: 400px;
+  width: 100%;
   margin: auto;
   text-align: center;
   position: relative;
-  height: 6em;
+  height: 10px;
 }
 
 .range-slider input[type=range] {
   position: absolute;
   left: 0;
-  bottom: 0;
 }
-
 
 input[type=range] {
   -webkit-appearance: none;
@@ -101,7 +100,7 @@ input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 5px;
   cursor: pointer;
-  animate: 0.2s;
+  /* animate: 0.2s; */
   background: #2497e3;
   border-radius: 1px;
   box-shadow: none;
@@ -112,54 +111,58 @@ input[type=range]::-webkit-slider-thumb {
   z-index: 2;
   position: relative;
   box-shadow: 0px 0px 0px #000;
-  border: 1px solid #2497e3;
+  border: 1px solid #FFCF67;
   height: 18px;
   width: 18px;
   border-radius: 25px;
-  background: #a1d0ff;
+  background: #FFCF67;
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -7px;
 }
 
 #bubbleF {
-  background: red;
-  color: white;
-  padding: 4px 12px;
+  background: #FFCF67;
+  color: #299196;
+  font-weight: bold;
+  padding: 6px 12px;
   position: absolute;
-  border-radius: 4px;
-  left: 50%;
-  transform: translateX(-50%);
+  border-radius: 15px;
+  left: -90px !important;
+  top: -10px;
 }
 
-#bubbleF::after {
+/* #bubbleF::after {
   content: "";
   position: absolute;
   width: 2px;
   height: 2px;
-  background: red;
+  background: #FFCF67;
   top: -1px;
   left: 50%;
-}
+} */
 
 #bubbleLast {
-  background: red;
+  background: transparent;
+  border: 2px solid #ffff;
+  font-weight: bold;
   color: white;
-  padding: 4px 12px;
+  padding: 6px 12px;
   position: absolute;
-  border-radius: 4px;
-  left: 50%;
-  transform: translateX(-50%);
+  border-radius: 17px;
+  top: -10px;
+  right: -90px;
+  left: unset !important;
 }
 
-#bubbleLast::after {
+/* #bubbleLast::after {
   content: "";
   position: absolute;
   width: 2px;
   height: 2px;
-  background: red;
+  background: #ffff;
   top: -1px;
   left: 50%;
-}
+} */
 
 </style>
