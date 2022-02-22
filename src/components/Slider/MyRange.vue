@@ -1,65 +1,112 @@
 <template>
-  <div class='range-slider'>
+  <div class="slider">
+    <div class="pro"></div>
+  </div>
+  <div class="range-slider">
     <output id="bubbleF" class="bubbleFirst">{{ first }}</output>
-    <input type="range" :min="minThreshold" :max="maxThreshold" :step="step"
-           @input="$emit('update:first', parseInt($event.target.value))"
-           :value='first'
-           id="rangeFirst">
-   
-    <input type="range" :min="minThreshold" :max="maxThreshold" :step="step"
-           @input="$emit('update:second', parseInt($event.target.value))" :value='second'
-           id="rangeLast">
+    <input
+      type="range"
+      :min="minThreshold"
+      :max="maxThreshold"
+      :step="step"
+      @input="$emit('update:first', parseInt($event.target.value))"
+      :value="first"
+      id="rangeFirst"
+    />
 
-    <output  id="bubbleLast" class="bubble">{{ second }}</output>
+    <input
+      type="range"
+      :min="minThreshold"
+      :max="maxThreshold"
+      :step="step"
+      @input="$emit('update:second', parseInt($event.target.value))"
+      :value="second"
+      id="rangeLast"
+    />
+
+    <output id="bubbleLast" class="bubble">{{ second }}</output>
   </div>
 </template>
 
 <script setup>
-
-import {onMounted} from "vue";
+import { onMounted } from "vue";
 
 defineProps({
   minThreshold: {
     type: Number,
-    default: -100
+    default: -100,
   },
   maxThreshold: {
     type: Number,
-    default: 100
+    default: 100,
   },
   step: {
     type: Number,
-    default: 1
+    default: 1,
   },
   first: {
     type: Number,
-    default: 10
+    default: 10,
   },
   second: {
     type: Number,
-    default: 80
-  }
-})
+    default: 80,
+  },
+});
 onMounted(() => {
-  setBubble('rangeFirst','bubbleF')
-  setBubble('rangeLast','bubbleLast')
-})
+  setBubble("rangeFirst", "bubbleF");
+  setBubble("rangeLast", "bubbleLast");
+
+   //Find the range between min and max value
+
+  const rangein = document.querySelectorAll(".range-slider input");
+  
+  const progress = document.querySelector(".slider .pro");
+
+
+  rangein.forEach((input) => {
+    input.addEventListener("input", (e) => {
+      let minVal = parseInt(rangein[0].value),
+        maxVal = parseInt(rangein[1].value);
+
+        progress.style.left = (minVal / rangein[0].max) * 100 + "%";
+        progress.style.right = 100 - (maxVal / rangein[1].max) * 100 + "%";
+      
+    });
+  });
+});
 
 const setBubble = (rangeId, bubbleId) => {
-
   const range = document.getElementById(rangeId);
   const bubble = document.getElementById(bubbleId);
   const val = range.value;
-  const min =  0;
-  const max =  100;
+  const min = 0;
+  const max = 100;
   const newVal = Number(((val - min) * 100) / (max - min));
 
   // Sorta magic numbers based on size of the native UI thumb
   bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
-}
+  
+};
+
+
 </script>
 
 <style scoped>
+.slider {
+  height: 4px;
+  background: #248286;
+  position: relative;
+  top: 12px;
+  max-width: 400px;
+}
+.slider .pro {
+  height: 4px;
+  left: 32%;
+  right: 32%;
+  position: absolute;
+  background: #ffcf67;
+}
 .range-slider {
   display: inline-block;
   max-width: 400px;
@@ -70,60 +117,64 @@ const setBubble = (rangeId, bubbleId) => {
   height: 10px;
 }
 
-.range-slider input[type=range] {
+.range-slider input[type="range"] {
   position: absolute;
   left: 0;
+  background: none;
 }
 
-input[type=range] {
+input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
 }
 
-input[type=range]:focus {
+input[type="range"]:focus {
   outline: none;
 }
 
-input[type=range]:focus::-webkit-slider-runnable-track {
+/* input[type=range]:focus::-webkit-slider-runnable-track {
   background: #FFCF67;
+} */
+
+input[type="range"]:focus::-ms-fill-lower {
+  background: #ffcf67;
 }
 
-input[type=range]:focus::-ms-fill-lower {
-  background: #FFCF67;
+input[type="range"]:focus::-ms-fill-upper {
+  background: #ffcf67;
 }
 
-input[type=range]:focus::-ms-fill-upper {
-  background: #FFCF67;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 5px;
+  height: 4px;
   cursor: pointer;
-  /* animate: 0.2s; */
-  background: #FFCF67;
-  border-radius: 1px;
+  background: none;
   box-shadow: none;
   border: 0;
 }
 
-
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   z-index: 2;
   position: relative;
   box-shadow: 0px 0px 0px #000;
-  border: 1px solid #FFCF67;
+  border: 1px solid #ffcf67;
   height: 18px;
   width: 18px;
   border-radius: 25px;
-  background: #FFCF67;
+  background: #ffcf67;
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -7px;
 }
 
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(2.2);
+  border: 3px solid #adb778;
+  border-radius: 50%;
+}
+
 #bubbleF {
-  background: #FFCF67;
+  background: #ffcf67;
   color: #299196;
   font-weight: bold;
   padding: 6px 12px;
@@ -148,7 +199,7 @@ input[type=range]::-webkit-slider-thumb {
   border: 2px solid #ffff;
   font-weight: bold;
   color: white;
-  padding: 6px 12px;
+  padding: 3px 12px;
   position: absolute;
   border-radius: 17px;
   top: -10px;
@@ -165,5 +216,4 @@ input[type=range]::-webkit-slider-thumb {
   top: -1px;
   left: 50%;
 } */
-
 </style>
