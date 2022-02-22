@@ -1,37 +1,38 @@
 <template>
   <div class="slider">
-    <div class="pro"></div>
+    <div class="pro" :style="{ 'left': leftLength,'right':rightLength }"></div>
   </div>
   <div class="range-slider">
-    <output id="bubbleF" class="bubbleFirst">{{ first }}</output>
+    <output id="bubbleF" class="bubbleFirst" :class="{'bubbleActive':firstBubbleActive}">{{ first }}</output>
     <input
-      type="range"
-      :min="minThreshold"
-      :max="maxThreshold"
-      :step="step"
-      @input="$emit('update:first', parseInt($event.target.value))"
-      :value="first"
-      id="rangeFirst"
+        type="range"
+        :min="minThreshold"
+        :max="maxThreshold"
+        :step="step"
+        @input="$emit('update:first', parseInt($event.target.value));setFirstActive();setRangeColor();"
+
+        :value="first"
+        id="rangeFirst"
     />
 
     <input
-      type="range"
-      :min="minThreshold"
-      :max="maxThreshold"
-      :step="step"
-      @input="$emit('update:second', parseInt($event.target.value))"
-      :value="second"
-      id="rangeLast"
+        type="range"
+        :min="minThreshold"
+        :max="maxThreshold"
+        :step="step"
+        @input="$emit('update:second', parseInt($event.target.value));setLastActive();setRangeColor();"
+        :value="second"
+        id="rangeLast"
     />
 
-    <output id="bubbleLast" class="bubble">{{ second }}</output>
+    <output id="bubbleLast" :class="{'bubbleActive':lastBubbleActive}" class="bubble">{{ second }}</output>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import {computed, onMounted, ref} from "vue";
 
-defineProps({
+const myProps = defineProps({
   minThreshold: {
     type: Number,
     default: -100,
@@ -53,28 +54,41 @@ defineProps({
     default: 80,
   },
 });
+
+let firstBubbleActive = ref(0)
+let lastBubbleActive = ref(0);
+
+let setLastActive = () => {
+  lastBubbleActive.value = 1;
+  firstBubbleActive.value = 0;
+}
+let setFirstActive = () => {
+  firstBubbleActive.value = 1;
+  lastBubbleActive.value = 0;
+}
+
 onMounted(() => {
   setBubble("rangeFirst", "bubbleF");
   setBubble("rangeLast", "bubbleLast");
-
-   //Find the range between min and max value
-
-  const rangein = document.querySelectorAll(".range-slider input");
-  
-  const progress = document.querySelector(".slider .pro");
-
-
-  rangein.forEach((input) => {
-    input.addEventListener("input", (e) => {
-      let minVal = parseInt(rangein[0].value),
-        maxVal = parseInt(rangein[1].value);
-
-        progress.style.left = (minVal / rangein[0].max) * 100 + "%";
-        progress.style.right = 100 - (maxVal / rangein[1].max) * 100 + "%";
-      
-    });
-  });
+  setRangeColor()
 });
+
+const leftLength = computed(
+    () => {
+      return (myProps.first / myProps.maxThreshold) * 100 + "%";
+    }
+)
+
+const rightLength = computed(() => {
+  return 100 - (myProps.second / myProps.maxThreshold) * 100 + "%";
+})
+
+const setRangeColor = () => {
+  const progress = document.querySelector(".slider .pro");
+  progress.style.left = leftLength.value;
+  progress.style.right = rightLength.value;
+}
+
 
 const setBubble = (rangeId, bubbleId) => {
   const range = document.getElementById(rangeId);
@@ -83,12 +97,9 @@ const setBubble = (rangeId, bubbleId) => {
   const min = 0;
   const max = 100;
   const newVal = Number(((val - min) * 100) / (max - min));
-
-  // Sorta magic numbers based on size of the native UI thumb
   bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
-  
-};
 
+};
 
 </script>
 
@@ -173,9 +184,16 @@ input[type="range"]::-webkit-slider-thumb:hover {
   border-radius: 50%;
 }
 
+.bubbleActive {
+  background: #ffcf67 !important;
+  color: #299196 !important;
+  border: none !important;
+}
+
 #bubbleF {
-  background: #ffcf67;
-  color: #299196;
+  background: transparent;
+  border: 2px solid #ffff;
+  color: white;
   font-weight: bold;
   padding: 6px 12px;
   position: absolute;
@@ -183,17 +201,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
   left: -90px !important;
   top: -10px;
 }
-
-/* #bubbleF::after {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: #FFCF67;
-  top: -1px;
-  left: 50%;
-} */
-
 #bubbleLast {
   background: transparent;
   border: 2px solid #ffff;
@@ -206,14 +213,4 @@ input[type="range"]::-webkit-slider-thumb:hover {
   right: -90px;
   left: unset !important;
 }
-
-/* #bubbleLast::after {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: #ffff;
-  top: -1px;
-  left: 50%;
-} */
 </style>
